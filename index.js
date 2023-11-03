@@ -42,8 +42,8 @@ const msgOption = {
     console.log(msg);
     const exchanges = await getExchangeInfo();
     const exchange = exchanges.find((exchange) => exchange.ccy.toLowerCase() === msg.text.slice(1))
-    try{if(msg.text.startsWith('/')) await bot.sendMessage(msg.chat.id, `Валюта ${exchange.ccy} до валюти ${exchange.base_ccy} \nЦіна покупки: ${exchange.buy} \nЦіна продажу: ${exchange.sale}`)
-  }catch(error){}
+    try {if(msg.text.startsWith('/')) await bot.sendMessage(msg.chat.id, `Валюта ${exchange.ccy} до валюти ${exchange.base_ccy} \nЦіна покупки: ${exchange.buy} \nЦіна продажу: ${exchange.sale}`)
+  }catch (error){}
     if(msg.text === "/convert"){
       bot.sendMessage(msg.chat.id,"Some text", msgOption)
 
