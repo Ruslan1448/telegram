@@ -15,12 +15,7 @@ const getExchangeInfo = async () => {
 };
 
 
-const bot = new TelegramBot(API_KEY_BOT, {
-
-    polling: true,
-    interval:300
-    
-});
+const bot = new TelegramBot(API_KEY_BOT, {polling: true    });
 
 const commands = [
   {command: "usd",
