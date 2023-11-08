@@ -30,7 +30,8 @@ const commands = [
 const msgOption = {
   reply_markup: JSON.stringify({
     inline_keyboard:[
-        [{text:"Text", callback_data: "lseflm"}]
+        [{text:"USD", callback_data: "usd"}],
+        [{text:"EUR", callback_data: "eur"}]
     ]
   })
 }
@@ -39,14 +40,21 @@ const msgOption = {
 
 
   bot.on('text', async msg => {
-    console.log(msg);
+   // console.log(msg);
     const exchanges = await getExchangeInfo();
     const exchange = exchanges.find((exchange) => exchange.ccy.toLowerCase() === msg.text.slice(1))
     try {if(msg.text.startsWith('/')) await bot.sendMessage(msg.chat.id, `Валюта ${exchange.ccy} до валюти ${exchange.base_ccy} \nЦіна покупки: ${exchange.buy} \nЦіна продажу: ${exchange.sale}`)
   }catch (error){}
     if(msg.text === "/convert"){
-      bot.sendMessage(msg.chat.id,"Some text", msgOption)
-
+      bot.sendMessage(msg.chat.id,"Select the required currency", msgOption)
+      
     }
 })
+
+  bot.on('callback_query', async msg=>{
+    console.log(msg.data);
+    const exchanges = await getExchangeInfo();
+    const exchange = exchanges.find((exchange => exchange.ccy.toLowerCase() === msg.data))
+    console.log(exchange)
+  })
 
