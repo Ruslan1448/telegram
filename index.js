@@ -17,6 +17,8 @@ const getExchangeInfo = async () => {
 
 const bot = new TelegramBot(API_KEY_BOT, {polling: true});
 
+
+
 const commands = [
   {command: "usd",
     description: "Dolar"},
@@ -37,24 +39,31 @@ const msgOption = {
 }
   bot.setMyCommands(commands);
 
-
+  const getExchange = async (ccy) => {
+    const exchanges = await getExchangeInfo();
+    const exchange = exchanges.find((exchange) => exchange.ccy.toLowerCase() === ccy)
+    return exchange;
+  }
 
   bot.on('text', async msg => {
-   // console.log(msg);
-    const exchanges = await getExchangeInfo();
-    const exchange = exchanges.find((exchange) => exchange.ccy.toLowerCase() === msg.text.slice(1))
+    const exchange = await getExchange(msg.text.slice(1))
     try {if(msg.text.startsWith('/')) await bot.sendMessage(msg.chat.id, `Валюта ${exchange.ccy} до валюти ${exchange.base_ccy} \nЦіна покупки: ${exchange.buy} \nЦіна продажу: ${exchange.sale}`)
   }catch (error){}
     if(msg.text === "/convert"){
-      bot.sendMessage(msg.chat.id,"Select the required currency", msgOption)
-      
+     await bot.sendMessage(msg.chat.id,"Select the required currency", msgOption)
+    }else {
     }
 })
+  const trade = async (exchange, ctx) =>{
+    const result = exchange.buy * 10
+    console.log(result)
+    bot.sendMessage(ctx.from.id, result)
+    return result;
 
-  bot.on('callback_query', async msg=>{
-    console.log(msg.data);
-    const exchanges = await getExchangeInfo();
-    const exchange = exchanges.find((exchange => exchange.ccy.toLowerCase() === msg.data))
-    console.log(exchange)
+  }
+  bot.on('callback_query', async ctx =>{
+    const exchange = await getExchange(ctx.data)
+    bot.sendMessage(ctx.from.id, "Your value?")
+    trade(exchange, ctx);
   })
 
